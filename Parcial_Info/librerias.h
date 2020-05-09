@@ -1,0 +1,3 @@
+
+
+string lectura(string texto);
