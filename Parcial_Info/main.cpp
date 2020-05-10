@@ -7,7 +7,7 @@ int main()
     string usuario="Usuario.txt",usu; //txt donde estan guardados los datos de los Usuarios
     string name, pasword;
     usuarios Admin, Cliente;
-    char option=' ',optionAdmin=' ', optionUsuario=' ';
+    char option=' ',optionAdmin=' ', optionUsuario=' ',id=' ';
     guardar=Admin.lectura(admin); //leemos el txt del Admin
     usu=Cliente.lectura(usuario); //leemos el txt del Cliente
 
@@ -50,10 +50,25 @@ int main()
                 cin>>optionAdmin; //leemos las opciones del Admin
 
                 if(optionAdmin=='A' or optionAdmin=='a'){
-                    cout<<endl<<"Estamos trabajando en eso"<<endl;
+                    Admin.cargar_inventario();
+                    Admin.imprimir_vector();
                 }
                 if(optionAdmin=='B' or optionAdmin=='b'){
-                    cout<<endl<<"Estamos trabajando en eso"<<endl;
+                    cout<<endl<<"1- Vasos de Plastico"<<endl;
+                    cout<<"2- Pan para perro"<<endl;
+                    cout<<"3- Salchicha para perro"<<endl;
+                    cout<<"4- Carne para hamburguesa"<<endl;
+                    cout<<"5- Salsa Roja"<<endl;
+                    cout<<"6- Otro"<<endl;
+                    cout<<"Su opcion es: ";
+                    cin>>id;
+                    if(id=='6'){
+                        cout<<"Ingrese id del producto: ";
+                        cin>>id;
+                    }
+                    else{
+                        //Admin.agregar_vector(id);
+                    }
                 }
                 if(optionAdmin=='C' or optionAdmin=='c'){
                     cout<<endl<<"Estamos trabajando en eso"<<endl;

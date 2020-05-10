@@ -20,8 +20,13 @@ class usuarios{
         void setConstrasenia(const string &value);
         bool loginNew(string name, string pasword, int mapa);
         void cargar_mapa(string txt, int mapa);
+        void cargar_inventario();
+        void imprimir_vector();
+        void agregar_vector(int i);
+
         map<string,string> comparar;
         map<string,string> compararCli;
+        map<string,vector<int>> productos;
 };
 
 string usuarios::getNombre() const
