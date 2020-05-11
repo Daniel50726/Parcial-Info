@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 #include <string>
 #include <stdio.h>
+#include <iomanip>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -22,10 +24,15 @@ class usuarios{
         void cargar_mapa(string txt, int mapa);
         void cargar_inventario();
         void imprimir_vector();
-        void agregar_vector(int i);
+        void guardar_mapa();
+        void cambiar_mapa(int id, int cantidad);
+        void agregar_mapa(string name,int cantidad, int precioU);
 
+        map<int,map <string,vector<int>>>::iterator r;
+        map<string,vector<int>>::iterator r2;
         map<string,string> comparar;
         map<string,string> compararCli;
+        map<int,map<string,vector<int>>> Inventario;
         map<string,vector<int>> productos;
 };
 

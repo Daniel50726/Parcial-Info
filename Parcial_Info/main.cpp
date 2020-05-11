@@ -3,11 +3,12 @@
 int main()
 {
     bool login=false;
+    int id=0,cantidadPro,preciouPro;
     string admin="Admin.txt",guardar; //txt donde estan guardados los datos del Admin
     string usuario="Usuario.txt",usu; //txt donde estan guardados los datos de los Usuarios
-    string name, pasword;
+    string name, pasword, namePro;
     usuarios Admin, Cliente;
-    char option=' ',optionAdmin=' ', optionUsuario=' ',id=' ';
+    char option=' ',optionAdmin=' ', optionUsuario=' ',optionid=' ';
     guardar=Admin.lectura(admin); //leemos el txt del Admin
     usu=Cliente.lectura(usuario); //leemos el txt del Cliente
 
@@ -45,29 +46,40 @@ int main()
                 cout<<"B - Agregar inventario"<<endl;
                 cout<<"C - Hacer combos"<<endl;
                 cout<<"D - Registrar usuario"<<endl;
-                cout<<"E - Salir"<<endl;
+                cout<<"E - Reporte de ventas"<<endl;
+                cout<<"F - Salir"<<endl;
                 cout<<"Su opcion es: ";
                 cin>>optionAdmin; //leemos las opciones del Admin
 
                 if(optionAdmin=='A' or optionAdmin=='a'){
                     Admin.cargar_inventario();
                     Admin.imprimir_vector();
+                    cout<<endl;
                 }
                 if(optionAdmin=='B' or optionAdmin=='b'){
-                    cout<<endl<<"1- Vasos de Plastico"<<endl;
-                    cout<<"2- Pan para perro"<<endl;
-                    cout<<"3- Salchicha para perro"<<endl;
-                    cout<<"4- Carne para hamburguesa"<<endl;
-                    cout<<"5- Salsa Roja"<<endl;
-                    cout<<"6- Otro"<<endl;
-                    cout<<"Su opcion es: ";
-                    cin>>id;
-                    if(id=='6'){
-                        cout<<"Ingrese id del producto: ";
+                    cout<<endl<<"Desea ingresar un nuevo producto? Y/N ";
+                    cin>>optionid;
+                    if(optionid=='N'){
+                        cout<<"Ingrese la id: ";
                         cin>>id;
+                        cout<<"Ingresa la cantidad: ";
+                        cin>>cantidadPro;
+                        Admin.cargar_inventario();
+                        Admin.cambiar_mapa(id,cantidadPro);
+                        Admin.imprimir_vector();
+                        Admin.guardar_mapa();
                     }
-                    else{
-                        //Admin.agregar_vector(id);
+                    else {
+                        cout<<"Ingrese el nombre del Producto: ";
+                        cin>>namePro;
+                        cout<<"Ingrese la cantidad: ";
+                        cin>>cantidadPro;
+                        cout<<"Ingrese el precio por unidad: ";
+                        cin>>preciouPro;
+                        Admin.cargar_inventario();
+                        Admin.agregar_mapa(namePro,cantidadPro,preciouPro);
+                        Admin.imprimir_vector();
+                        Admin.guardar_mapa();
                     }
                 }
                 if(optionAdmin=='C' or optionAdmin=='c'){
@@ -77,6 +89,9 @@ int main()
                     cout<<endl<<"Estamos trabajando en eso"<<endl;
                 }
                 if(optionAdmin=='E' or optionAdmin=='e'){
+                    cout<<endl<<"Estamos trabajando en eso"<<endl;
+                }
+                if(optionAdmin=='F' or optionAdmin=='f'){
                     login=false;
                 }
             }
