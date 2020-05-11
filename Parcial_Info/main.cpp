@@ -2,11 +2,12 @@
 
 int main()
 {
-    bool login=false;
-    int id=0,cantidadPro,preciouPro;
+    vector<int> idInv;
+    bool login=false,proCom=false;
+    int id=0,cantidadPro,preciouPro,optionCom,cantCom,preCom;
     string admin="Admin.txt",guardar; //txt donde estan guardados los datos del Admin
     string usuario="Usuario.txt",usu; //txt donde estan guardados los datos de los Usuarios
-    string name, pasword, namePro;
+    string name, pasword, namePro,nameCom, nameUs, conUs;
     usuarios Admin, Cliente;
     char option=' ',optionAdmin=' ', optionUsuario=' ',optionid=' ';
     guardar=Admin.lectura(admin); //leemos el txt del Admin
@@ -59,7 +60,7 @@ int main()
                 if(optionAdmin=='B' or optionAdmin=='b'){
                     cout<<endl<<"Desea ingresar un nuevo producto? Y/N ";
                     cin>>optionid;
-                    if(optionid=='N'){
+                    if(optionid=='N' or optionid=='n'){
                         cout<<"Ingrese la id: ";
                         cin>>id;
                         cout<<"Ingresa la cantidad: ";
@@ -70,8 +71,9 @@ int main()
                         Admin.guardar_mapa();
                     }
                     else {
+                        cin.ignore();
                         cout<<"Ingrese el nombre del Producto: ";
-                        cin>>namePro;
+                        getline(cin, namePro);
                         cout<<"Ingrese la cantidad: ";
                         cin>>cantidadPro;
                         cout<<"Ingrese el precio por unidad: ";
@@ -83,10 +85,56 @@ int main()
                     }
                 }
                 if(optionAdmin=='C' or optionAdmin=='c'){
-                    cout<<endl<<"Estamos trabajando en eso"<<endl;
+                    cout<<endl<<"Que combo desea hacer? "<<endl;
+                    cout<<"Ingrese la id de los productos que va a usar (se ejecutara hasta que ingrese 0): ";
+                    cin>>optionCom;
+                    cout<<"Ingrese la cantidad: ";
+                    cin>>cantCom;
+                    idInv.push_back(optionCom);
+                    idInv.push_back(cantCom);
+                    if(optionCom!=0 and cantCom!=0){
+                        Admin.cargar_inventario();
+                        proCom=Admin.comprobar_inv(optionCom,cantCom);
+                        if(proCom==true){
+                            while(optionCom!= 0 and cantCom!=0){
+                                cout<<"Ingrese la id de los productos que va a usar (se ejecutara hasta que ingrese 0): ";
+                                cin>>optionCom;
+                                cout<<"Ingrese la cantidad: ";
+                                cin>>cantCom;
+                                if(optionCom!=0 and cantCom!=0){
+                                    idInv.push_back(optionCom);
+                                    idInv.push_back(cantCom);
+                                    proCom=Admin.comprobar_inv(optionCom,cantCom);
+                                    if(proCom==false){
+                                        cout<<endl<<"No se puede crear el combo, inventario insuficiente"<<endl;
+                                        idInv.clear();
+                                        break;
+                                    }
+                                }
+                                else break;
+                            }
+                        }
+                        else cout<<endl<<"No se puede crear el combo, inventario insuficiente"<<endl;
+                        if(proCom==true){
+                            cin.ignore();
+                            cout<<"Nombre del combo: ";
+                            getline(cin, nameCom);
+                            cout<<"Ingrese el precio del combo: ";
+                            cin>>preCom;
+                            idInv.insert(idInv.begin()+0,preCom);
+                            Admin.guardar_combo(nameCom,idInv);
+                        }
+                    }
+                    else idInv.clear();
                 }
                 if(optionAdmin=='D' or optionAdmin=='d'){
-                    cout<<endl<<"Estamos trabajando en eso"<<endl;
+                    cin.ignore();
+                    cout<<endl<<"Ingrese el nombre del usuario: ";
+                    getline(cin,nameUs);
+                    cout<<endl<<"Ingrese la contrasenia del usuario: ";
+                    getline(cin,conUs);
+                    Admin.agregar_usu(nameUs,conUs,usuario);
+                    Admin.cargar_mapa(usu,0);
                 }
                 if(optionAdmin=='E' or optionAdmin=='e'){
                     cout<<endl<<"Estamos trabajando en eso"<<endl;

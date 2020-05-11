@@ -165,7 +165,7 @@ void usuarios::cambiar_mapa(int id, int cant){
     int precioUn;
     int canAc;
     int precioAc;
-    copia=Inventario.find(id)->second; //buscamos la id del producto en el primer mapa
+    copia=Inventario.find(id)->second; //buscamos el valor de la id del producto en el primer mapa
     for(r2=copia.begin();r2!=copia.end();r2++){ //recorremos el segundo mapa
         canAc=r2->second[0]; //accedemos a la cantidad
         precioAc=r2->second[1]; //accedemos al precio
@@ -189,4 +189,39 @@ void usuarios::agregar_mapa(string name, int cantidad, int precioU){
     copia[name]=can_pre; //creamos el mapa map<strin,vector<int>>
     Inventario[tam+1]=copia; //agregamos el nuevo producto
 
+}
+
+bool usuarios::comprobar_inv(int id, int cantidad){
+    int cantAc;
+     map<string,vector<int>> copia;
+     copia=Inventario.find(id)->second;
+     for(r2=copia.begin();r2!=copia.end();r2++){
+         cantAc=r2->second[0];
+         if(cantAc-cantidad<0){
+             return false;
+         }
+         else return true;
+     }
+}
+
+void usuarios::guardar_combo(string name, vector<int> precio){
+    long long int tam = precio.size();
+    string combo="Combos.txt";
+    ofstream agregar;
+    agregar.open(combo,ios::app);
+    agregar<<name<<" "<<"$"<<precio[0]<<" "<<"/";
+    for(int i=1;i<tam;i++){
+        agregar<<precio[i];
+    }
+    agregar<<"\n";
+    agregar.close();
+    cout<<endl<<"COMBO CREADO CON EXITO!!!"<<endl;
+}
+
+void usuarios::agregar_usu(string name, string pasword, string txt){
+    ofstream agregar;
+    agregar.open(txt,ios::app);
+    agregar<<"\n"<<name<<" "<<pasword;
+    agregar.close();
+    cout<<endl<<"USUARIO REGISTRADO CON EXITO!!!"<<endl;
 }

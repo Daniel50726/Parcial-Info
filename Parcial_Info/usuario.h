@@ -27,6 +27,10 @@ class usuarios{
         void guardar_mapa();
         void cambiar_mapa(int id, int cantidad);
         void agregar_mapa(string name,int cantidad, int precioU);
+        bool comprobar_inv(int id, int cantidad);
+        void guardar_combo(string name, vector<int> precio);
+        void agregar_usu(string name, string pasword, string txt);
+
 
         map<int,map <string,vector<int>>>::iterator r;
         map<string,vector<int>>::iterator r2;
