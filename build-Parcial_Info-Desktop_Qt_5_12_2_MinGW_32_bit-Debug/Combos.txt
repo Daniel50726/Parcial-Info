@@ -1,2 +1,10 @@
-Perro + gaseosa $20000 /112131
-Hamburguesa + Papas + Gaseosa $40000 /61417111
+Dos perros + Gaseosa $20000 /112232
+Hamburguesa + Gaseosa $30000 /416111
+Perro + Nachos $20000 /213181
+Perro + Gaseosa $15000 /112131
+Perro + Gaseosa + papas $20000 /21317111
+Perro + Hamburguesa $40000 /21314161
+Hamburguesa + papa + gaseosa $50000 /41617111
+2 Perros + 2 gaseosas + 2 papas $30000 /22321272
+Nachos + Gaseosa $5000 /8111
+Perro+Nachos+Hamburguesa $25000 /2131814161

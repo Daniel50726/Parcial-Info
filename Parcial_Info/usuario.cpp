@@ -147,7 +147,7 @@ void usuarios::cargar_inventario(){
 void usuarios::imprimir_vector(){
     map<string,vector<int>> copia; //creamos una copia para acceder al segundo mapa
     cout<<endl<<"EL INVENTARIO ES"<<endl;
-    cout<<endl<<"|id|                 Nombre                           |cant|precio|"<<endl;
+    cout<<endl<<"|id|                 Nombre                          |cant|precio|"<<endl;
     for(r=Inventario.begin();r!=Inventario.end();r++){
         printElement(r->first,5);
         copia=r->second;  //agregamos a la copia el segundo mapa
@@ -224,4 +224,67 @@ void usuarios::agregar_usu(string name, string pasword, string txt){
     agregar<<"\n"<<name<<" "<<pasword;
     agregar.close();
     cout<<endl<<"USUARIO REGISTRADO CON EXITO!!!"<<endl;
+}
+
+void usuarios::cargar_combos(string txt){
+    vector<int> pre_id_can;
+    int id=1,precio,idCan;
+    unsigned int tamCo;
+    string nameCom,preCom="",idCom,copia;
+    string combo=lectura(txt);
+    long long int tam=combo.size();
+    int lineas=1,i=0;
+
+    for(int k=0;k<tam;k++){
+        if(combo[k]=='\n') lineas++;
+    }
+
+    for(int k=0;k<lineas-1;k++){
+         while(combo[i]!='\n' and combo[i] !='\0'){
+            copia.append(1,combo[i]);
+            i++;
+        }
+         i++;
+
+        nameCom=copia.substr(0,copia.find('$')-1);
+        tamCo=copia.size();
+
+        for(unsigned int i=copia.find('$')+1;i<copia.find('/')-1;i++){
+            preCom+=copia[i];
+        }
+
+        precio=stoi(preCom);
+        pre_id_can.push_back(precio);
+
+        for(unsigned int i=copia.find('/')+1;i<tamCo;i++ ){
+            idCom+=copia[i];
+            idCan=stoi(idCom);
+            pre_id_can.push_back(idCan);
+            idCom.clear();
+        }
+
+        productos[nameCom]=pre_id_can;
+        combos[id]=productos;
+        id++;
+
+        pre_id_can.clear();
+        preCom.clear();
+        productos.clear();
+        copia.clear();
+    }
+}
+
+void usuarios::imprimir_combos(){
+    map<string,vector<int>> copia;
+    cout<<endl<<"LOS COMBOS SON: "<<endl;
+    cout<<"id|               Nombre              | precio "<<endl;
+    for(r=combos.begin();r!=combos.end();r++){
+        printElement(r->first,5);
+        copia=r->second;
+        for(r2=copia.begin();r2!=copia.end();r2++){
+            printElement(r2->first,35);
+            printElement(r2->second[0],5);
+            cout<<endl;
+        }
+    }
 }

@@ -4,9 +4,10 @@ int main()
 {
     vector<int> idInv;
     bool login=false,proCom=false;
-    int id=0,cantidadPro,preciouPro,optionCom,cantCom,preCom;
+    int id=0,cantidadPro,preciouPro,optionCom=1,cantCom=1,preCom,compra=0;
     string admin="Admin.txt",guardar; //txt donde estan guardados los datos del Admin
     string usuario="Usuario.txt",usu; //txt donde estan guardados los datos de los Usuarios
+    string combo="Combos.txt";
     string name, pasword, namePro,nameCom, nameUs, conUs;
     usuarios Admin, Cliente;
     char option=' ',optionAdmin=' ', optionUsuario=' ',optionid=' ';
@@ -86,46 +87,38 @@ int main()
                 }
                 if(optionAdmin=='C' or optionAdmin=='c'){
                     cout<<endl<<"Que combo desea hacer? "<<endl;
-                    cout<<"Ingrese la id de los productos que va a usar (se ejecutara hasta que ingrese 0): ";
-                    cin>>optionCom;
-                    cout<<"Ingrese la cantidad: ";
-                    cin>>cantCom;
-                    idInv.push_back(optionCom);
-                    idInv.push_back(cantCom);
-                    if(optionCom!=0 and cantCom!=0){
-                        Admin.cargar_inventario();
-                        proCom=Admin.comprobar_inv(optionCom,cantCom);
-                        if(proCom==true){
-                            while(optionCom!= 0 and cantCom!=0){
-                                cout<<"Ingrese la id de los productos que va a usar (se ejecutara hasta que ingrese 0): ";
-                                cin>>optionCom;
-                                cout<<"Ingrese la cantidad: ";
-                                cin>>cantCom;
-                                if(optionCom!=0 and cantCom!=0){
-                                    idInv.push_back(optionCom);
-                                    idInv.push_back(cantCom);
-                                    proCom=Admin.comprobar_inv(optionCom,cantCom);
-                                    if(proCom==false){
-                                        cout<<endl<<"No se puede crear el combo, inventario insuficiente"<<endl;
-                                        idInv.clear();
-                                        break;
-                                    }
-                                }
-                                else break;
+                    optionCom=1;
+                    cantCom=1;
+                    while(optionCom!=0 and cantCom!=0){
+                        cout<<"Ingrese la id de los productos que va a usar (se ejecutara hasta que ingrese 0): ";
+                        cin>>optionCom;
+                        cout<<"Ingrese la cantidad: ";
+                        cin>>cantCom;
+                        if(optionCom!=0 and cantCom!=0){
+                            compra=1;
+                            idInv.push_back(optionCom);
+                            idInv.push_back(cantCom);
+                            Admin.cargar_inventario();
+                            proCom=Admin.comprobar_inv(optionCom,cantCom);
+                            if(proCom==false){
+                                cout<<endl<<"NO SE PUEDE GENERAR EL COMBO, INVENTARIO INSUFICIENTE"<<endl;
+                                idInv.clear();
+                                break;
                             }
                         }
-                        else cout<<endl<<"No se puede crear el combo, inventario insuficiente"<<endl;
-                        if(proCom==true){
+                        else if(compra==1){
                             cin.ignore();
-                            cout<<"Nombre del combo: ";
-                            getline(cin, nameCom);
+                            cout<<"Ingrese el nombre del combo: ";
+                            getline(cin,nameCom);
                             cout<<"Ingrese el precio del combo: ";
                             cin>>preCom;
                             idInv.insert(idInv.begin()+0,preCom);
                             Admin.guardar_combo(nameCom,idInv);
+                            Admin.cargar_combos(combo);
+                            Admin.imprimir_combos();
+                            idInv.clear();
                         }
                     }
-                    else idInv.clear();
                 }
                 if(optionAdmin=='D' or optionAdmin=='d'){
                     cin.ignore();
@@ -170,7 +163,8 @@ int main()
                 cin>>optionUsuario; //leemos las opciones del Usuario
 
                 if(optionUsuario=='A' or optionUsuario == 'a'){
-                    cout<<"Estamos trabajando en eso"<<endl;
+                    Cliente.cargar_combos(combo);
+                    Cliente.imprimir_combos();
                 }
                 if(optionUsuario=='B' or optionUsuario == 'b'){
                     cout<<"Estamos trabajando en eso"<<endl;
