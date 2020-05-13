@@ -169,7 +169,11 @@ void usuarios::cambiar_mapa(int id, int cant){
     for(r2=copia.begin();r2!=copia.end();r2++){ //recorremos el segundo mapa
         canAc=r2->second[0]; //accedemos a la cantidad
         precioAc=r2->second[1]; //accedemos al precio
-        precioUn=precioAc/canAc; //calculamos el precio por unidad
+        if(canAc==0){
+           cout<<"Ingresa el precio por unidad: ";
+           cin>>precioUn;
+        }
+        else precioUn=precioAc/canAc; //calculamos el precio por unidad
         canAc+=cant; //modificamos la cantidad
         precioAc+=precioUn*cant; //modificamos el precio
         //ingresamos las modificaciones a la copia
@@ -288,3 +292,111 @@ void usuarios::imprimir_combos(){
         }
     }
 }
+
+bool usuarios::compro_dis(int id){
+    //Esta funcion tiene que rectificar que halla existencia del producto y que el dinero sea suficiente
+    usuarios ff;
+    ff.cargar_inventario();
+    bool disponibilidad=false;
+    map<string,vector<int>> copia;
+    copia=combos.find(id)->second;
+    int vaid,vacan;
+    r2=copia.begin();
+    int tam=r2->second.size();
+    for(int posid=1,poscan=2;poscan<tam;posid+=2,poscan+=2){
+        vaid=r2->second[posid];
+        vacan=r2->second[poscan];
+        disponibilidad=ff.comprobar_inv(vaid,vacan);
+        if(disponibilidad!=true){
+            cout<<endl<<"COMBO NO DISPONIBLE"<<endl;
+            break;
+        }
+    }
+    if(disponibilidad==true){
+        return disponibilidad;
+    }
+    else return false;
+}
+
+bool usuarios::din_suf(int id,int dinero){
+    int preCom;
+    map<string,vector<int>> copia;
+    copia=combos.find(id)->second;
+    r2=copia.begin();
+    preCom=r2->second[0];
+    if(preCom<=dinero){
+
+        return true;
+    }
+    else return false;
+}
+
+void usuarios::cambiar_invCom(int id, int cant){
+    map<string,vector<int>> copia; //creamos un copia para el segundo mapa
+    int precioUn;
+    int canAc;
+    int precioAc;
+    copia=Inventario.find(id)->second; //buscamos el valor de la id del producto en el primer mapa
+    for(r2=copia.begin();r2!=copia.end();r2++){ //recorremos el segundo mapa
+        canAc=r2->second[0]; //accedemos a la cantidad
+        precioAc=r2->second[1]; //accedemos al precio
+        precioUn=precioAc/canAc; //calculamos el precio por unidad
+        canAc-=cant; //modificamos la cantidad
+        precioAc-=precioUn*cant; //modificamos el precio
+        //ingresamos las modificaciones a la copia
+        r2->second[0]=canAc;
+        r2->second[1]=precioAc;
+    }
+    Inventario[id]=copia; //modificamos el mapa
+}
+
+void usuarios::mod_inventario(int id){
+    usuarios ff;
+    ff.cargar_inventario();
+    map<string,vector<int>> copia;
+    copia=combos.find(id)->second;
+    int vaid,vacan;
+    r2=copia.begin();
+    int tam=r2->second.size();
+    for(int posid=1,poscan=2;poscan<tam;posid+=2,poscan+=2){
+        vaid=r2->second[posid];
+        vacan=r2->second[poscan];
+        ff.cambiar_invCom(vaid,vacan);
+        ff.guardar_mapa();
+    }
+}
+
+int regresoCliente(int cosCom,int dinCli){
+    int contadora=0;
+    int devuelta=dinCli-cosCom;
+    int R=0,C;
+    C=devuelta;
+    int M[10]={50000,20000,10000,5000,2000,1000,500,200,100,50};
+    for(int i=0;i<10;i++)
+    {
+        R=C/M[i];
+        C=C%M[i];
+        if(R!=0){
+            contadora+=M[i];
+            cout<<"Se entrega "<<R<<" = $"<<M[i]<<endl;
+        }
+    }
+    if(C!=0){
+        cout<<"Se entrega en monedas: "<<C<<endl;
+    }
+    contadora+=C;
+    return contadora;
+    return 0;}
+
+void usuarios::mayor_menor(int id, int dinero){
+    int preCom,regreso;
+    map<string,vector<int>> copia;
+    copia=combos.find(id)->second;
+    r2=copia.begin();
+    preCom=r2->second[0];
+    if(preCom<dinero){
+        regreso=regresoCliente(preCom,dinero);
+        cout<<"Su regreso total es de: "<<regreso<<endl;
+    }
+}
+

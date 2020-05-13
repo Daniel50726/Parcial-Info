@@ -3,7 +3,7 @@
 int main()
 {
     vector<int> idInv;
-    bool login=false,proCom=false;
+    bool login=false,proCom=false,costCom=false,dinCom;
     int id=0,cantidadPro,preciouPro,optionCom=1,cantCom=1,preCom,compra=0;
     string admin="Admin.txt",guardar; //txt donde estan guardados los datos del Admin
     string usuario="Usuario.txt",usu; //txt donde estan guardados los datos de los Usuarios
@@ -167,7 +167,21 @@ int main()
                     Cliente.imprimir_combos();
                 }
                 if(optionUsuario=='B' or optionUsuario == 'b'){
-                    cout<<"Estamos trabajando en eso"<<endl;
+                    cout<<endl<<"Ingrese la id del combo que desea comprar: ";
+                    cin>>id;
+                    cout<<"Con cuanto va a pagar?: ";
+                    cin>>preCom;
+                    cout<<endl;
+                    Cliente.cargar_combos(combo);
+                    costCom=Cliente.compro_dis(id);
+                    dinCom=Cliente.din_suf(id,preCom);
+                    if(costCom==true and dinCom==true){
+                        Cliente.cargar_inventario();
+                        Cliente.mod_inventario(id);
+                        Cliente.mayor_menor(id,preCom);
+                        cout<<endl<<"En que sala desea recibir su orden? "<<endl;
+                        cout<<"En que asiento? "<<endl;
+                    }
                 }
                 if(optionUsuario=='C' or optionUsuario == 'c'){
                     login=false;

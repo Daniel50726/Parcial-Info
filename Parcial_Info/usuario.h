@@ -32,6 +32,11 @@ class usuarios{
         void agregar_usu(string name, string pasword, string txt);
         void cargar_combos(string txt);
         void imprimir_combos();
+        bool compro_dis(int id);
+        bool din_suf(int id,int dinero);
+        void cambiar_invCom(int id, int cant);
+        void mod_inventario(int id);
+        void mayor_menor(int id, int dinero);
 
         map<int,map <string,vector<int>>>::iterator r;
         map<string,vector<int>>::iterator r2;
@@ -62,5 +67,6 @@ void usuarios::setConstrasenia(const string &value)
     clave=value;
 }
 
+int regresoCliente(int cosCom,int dinCli);
 
 
