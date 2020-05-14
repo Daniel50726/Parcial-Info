@@ -8,3 +8,5 @@ Hamburguesa + papa + gaseosa $50000 /41617111
 2 Perros + 2 gaseosas + 2 papas $30000 /22321272
 Nachos + Gaseosa $5000 /8111
 Perro+Nachos+Hamburguesa $25000 /2131814161
+Papas+Nachos+Gaseosa $7500 /117181
+2 Perros + 2 gaseosas $25000 /122232

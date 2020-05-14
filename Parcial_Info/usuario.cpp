@@ -230,7 +230,7 @@ void usuarios::agregar_usu(string name, string pasword, string txt){
     cout<<endl<<"USUARIO REGISTRADO CON EXITO!!!"<<endl;
 }
 
-void usuarios::cargar_combos(string txt){
+void usuarios::cargar_combos(string txt, int tipo){
     vector<int> pre_id_can;
     int id=1,precio,idCan;
     unsigned int tamCo;
@@ -268,9 +268,15 @@ void usuarios::cargar_combos(string txt){
         }
 
         productos[nameCom]=pre_id_can;
-        combos[id]=productos;
-        id++;
 
+        if(tipo==0){
+            combos[id]=productos;
+        }
+        else {
+            ventas[id]=productos;
+        }
+
+        id++;
         pre_id_can.clear();
         preCom.clear();
         productos.clear();
@@ -396,7 +402,74 @@ void usuarios::mayor_menor(int id, int dinero){
     preCom=r2->second[0];
     if(preCom<dinero){
         regreso=regresoCliente(preCom,dinero);
-        cout<<"Su regreso total es de: "<<regreso<<endl;
+        cout<<"Su regreso total es de: $"<<regreso<<endl;
     }
 }
 
+void usuarios::guardar_compra(){
+    map<string,vector<int>> copia;
+    int A=0;
+    string combo="Ventas.txt";
+    ofstream agregar;
+
+    for(r=combos.begin();r!=combos.end();r++){
+        copia=r->second;
+        for(r2=copia.begin();r2!=copia.end();r2++){
+            if(A==0){
+                agregar.open(combo,ios::out);
+                agregar<<r2->first<<" "<<"$"<<r2->second[0]<<" "<<"/"<<"0"<<"\n";
+                A=1;
+                agregar.close();
+            }
+            else{
+                agregar.open(combo,ios::app);
+                agregar<<r2->first<<" "<<"$"<<r2->second[0]<<" "<<"/"<<"0"<<"\n";
+                agregar.close();
+            }
+
+        }
+    }
+
+}
+
+void usuarios::efec_compra(int id){
+    int cant=0;
+    map<string,vector<int>> copia;
+    copia=ventas.find(id)->second;
+    r2=copia.begin();
+    cant=r2->second[1];
+    cant+=1;
+    r2->second[1]=cant;
+    ventas[id]=copia;
+}
+
+void usuarios::actu_compra(){
+    int A=0;
+    map<string,vector<int>> copia;
+    string name,precio,cant;
+    int pre,can;
+    string venta="Ventas.txt";
+    ofstream agregar;
+    for(r=ventas.begin();r!=ventas.end();r++){
+        copia=r->second;
+        for(r2=copia.begin();r2!=copia.end();r2++){
+            name=r2->first;
+            pre=r2->second[0];
+            can=r2->second[1];
+            cant=std::to_string(can);
+            precio=std::to_string(pre);
+
+            if(A==0){
+                agregar.open(venta,ios::out);
+                agregar<<r2->first<<" "<<"$"<<r2->second[0]<<" "<<"/"<<r2->second[1]<<"\n";
+                A=1;
+                agregar.close();
+            }
+            else{
+                agregar.open(venta,ios::app);
+                agregar<<r2->first<<" "<<"$"<<r2->second[0]<<" "<<"/"<<r2->second[1]<<"\n";
+                agregar.close();
+            }
+        }
+    }
+}

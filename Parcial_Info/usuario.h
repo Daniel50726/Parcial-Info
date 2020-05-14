@@ -30,14 +30,18 @@ class usuarios{
         bool comprobar_inv(int id, int cantidad);
         void guardar_combo(string name, vector<int> precio);
         void agregar_usu(string name, string pasword, string txt);
-        void cargar_combos(string txt);
+        void cargar_combos(string txt,int tipo);
         void imprimir_combos();
         bool compro_dis(int id);
         bool din_suf(int id,int dinero);
         void cambiar_invCom(int id, int cant);
         void mod_inventario(int id);
         void mayor_menor(int id, int dinero);
+        void guardar_compra();
+        void efec_compra(int id);
+        void actu_compra();
 
+        map<int,map<string,vector<int>>> ventas;
         map<int,map <string,vector<int>>>::iterator r;
         map<string,vector<int>>::iterator r2;
         map<string,string> comparar;

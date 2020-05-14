@@ -7,7 +7,7 @@ int main()
     int id=0,cantidadPro,preciouPro,optionCom=1,cantCom=1,preCom,compra=0;
     string admin="Admin.txt",guardar; //txt donde estan guardados los datos del Admin
     string usuario="Usuario.txt",usu; //txt donde estan guardados los datos de los Usuarios
-    string combo="Combos.txt";
+    string combo="Combos.txt",ventas="Ventas.txt";
     string name, pasword, namePro,nameCom, nameUs, conUs;
     usuarios Admin, Cliente;
     char option=' ',optionAdmin=' ', optionUsuario=' ',optionid=' ';
@@ -114,7 +114,7 @@ int main()
                             cin>>preCom;
                             idInv.insert(idInv.begin()+0,preCom);
                             Admin.guardar_combo(nameCom,idInv);
-                            Admin.cargar_combos(combo);
+                            Admin.cargar_combos(combo,0);
                             Admin.imprimir_combos();
                             idInv.clear();
                         }
@@ -163,7 +163,7 @@ int main()
                 cin>>optionUsuario; //leemos las opciones del Usuario
 
                 if(optionUsuario=='A' or optionUsuario == 'a'){
-                    Cliente.cargar_combos(combo);
+                    Cliente.cargar_combos(combo,0);
                     Cliente.imprimir_combos();
                 }
                 if(optionUsuario=='B' or optionUsuario == 'b'){
@@ -172,10 +172,14 @@ int main()
                     cout<<"Con cuanto va a pagar?: ";
                     cin>>preCom;
                     cout<<endl;
-                    Cliente.cargar_combos(combo);
+                    Cliente.cargar_combos(combo,0);
+                    //Cliente.guardar_compra();
+                    Cliente.cargar_combos(ventas,1);
                     costCom=Cliente.compro_dis(id);
                     dinCom=Cliente.din_suf(id,preCom);
                     if(costCom==true and dinCom==true){
+                        Cliente.efec_compra(id);
+                        Cliente.actu_compra();
                         Cliente.cargar_inventario();
                         Cliente.mod_inventario(id);
                         Cliente.mayor_menor(id,preCom);
