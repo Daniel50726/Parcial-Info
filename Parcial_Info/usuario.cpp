@@ -147,12 +147,12 @@ void usuarios::cargar_inventario(){
 void usuarios::imprimir_vector(){
     map<string,vector<int>> copia; //creamos una copia para acceder al segundo mapa
     cout<<endl<<"EL INVENTARIO ES"<<endl;
-    cout<<endl<<"|id|                 Nombre                          |cant|precio|"<<endl;
+    cout<<endl<<"|id|           Nombre             |cant|precio|"<<endl;
     for(r=Inventario.begin();r!=Inventario.end();r++){
         printElement(r->first,5);
         copia=r->second;  //agregamos a la copia el segundo mapa
         for(r2=copia.begin();r2!=copia.end();r2++){
-            printElement(r2->first,50);
+            printElement(r2->first,30);
             printElement(r2->second[0],5);
             printElement(r2->second[1],5);
             cout<<endl;
@@ -198,10 +198,10 @@ void usuarios::agregar_mapa(string name, int cantidad, int precioU){
 bool usuarios::comprobar_inv(int id, int cantidad){
     int cantAc;
      map<string,vector<int>> copia;
-     copia=Inventario.find(id)->second;
-     for(r2=copia.begin();r2!=copia.end();r2++){
-         cantAc=r2->second[0];
-         if(cantAc-cantidad<0){
+     copia=Inventario.find(id)->second; //buscamos el producto que se va a utilizar
+     for(r2=copia.begin();r2!=copia.end();r2++){ //nos movemos dentro del valor de la id ingresada
+         cantAc=r2->second[0]; //Extraemos la cantidad que hay en el inventario
+         if(cantAc-cantidad<0){ //comprobamos que si es posible generar el combo
              return false;
          }
          else return true;
@@ -212,8 +212,8 @@ void usuarios::guardar_combo(string name, vector<int> precio){
     long long int tam = precio.size();
     string combo="Combos.txt";
     ofstream agregar;
-    agregar.open(combo,ios::app);
-    agregar<<name<<" "<<"$"<<precio[0]<<" "<<"/";
+    agregar.open(combo,ios::app); //abrimos el txt en modo agregar
+    agregar<<name<<" "<<"$"<<precio[0]<<" "<<"/"; //copiamos en el txt de la forma correcta
     for(int i=1;i<tam;i++){
         agregar<<precio[i];
     }
@@ -239,44 +239,45 @@ void usuarios::cargar_combos(string txt, int tipo){
     long long int tam=combo.size();
     int lineas=1,i=0;
 
-    for(int k=0;k<tam;k++){
+    for(int k=0;k<tam;k++){ //contamos la lineas
         if(combo[k]=='\n') lineas++;
     }
 
-    for(int k=0;k<lineas-1;k++){
+    for(int k=0;k<lineas-1;k++){ //recorremos las lineas -1 porque siempre hacemos un \n al final
          while(combo[i]!='\n' and combo[i] !='\0'){
             copia.append(1,combo[i]);
             i++;
         }
          i++;
 
-        nameCom=copia.substr(0,copia.find('$')-1);
+        nameCom=copia.substr(0,copia.find('$')-1); //extraemos el nombre
         tamCo=copia.size();
 
-        for(unsigned int i=copia.find('$')+1;i<copia.find('/')-1;i++){
+        for(unsigned int i=copia.find('$')+1;i<copia.find('/')-1;i++){ //extraemos el precio
             preCom+=copia[i];
         }
 
-        precio=stoi(preCom);
-        pre_id_can.push_back(precio);
+        precio=stoi(preCom); //convertimos el precio a entero
+        pre_id_can.push_back(precio); //agregamos al vector
 
-        for(unsigned int i=copia.find('/')+1;i<tamCo;i++ ){
+        for(unsigned int i=copia.find('/')+1;i<tamCo;i++ ){ //extraemos la id y cantidad de los productos utilizados
             idCom+=copia[i];
-            idCan=stoi(idCom);
-            pre_id_can.push_back(idCan);
-            idCom.clear();
+            idCan=stoi(idCom); //los convertimos a entero
+            pre_id_can.push_back(idCan); //los agregamos al vector
+            idCom.clear(); //limpiamos idCom
         }
 
-        productos[nameCom]=pre_id_can;
+        productos[nameCom]=pre_id_can; //agregamos el vector al mapa, con  el nombre como key
 
         if(tipo==0){
-            combos[id]=productos;
+            combos[id]=productos; //almacenos el mapa pequeño en combos
         }
         else {
-            ventas[id]=productos;
+            ventas[id]=productos; //almacenamos el mapa pequeño en ventas
         }
 
-        id++;
+        id++; //vamos creando las id
+        //reiniciamos variables
         pre_id_can.clear();
         preCom.clear();
         productos.clear();
@@ -285,36 +286,38 @@ void usuarios::cargar_combos(string txt, int tipo){
 }
 
 void usuarios::imprimir_combos(){
+    bool dis;
     map<string,vector<int>> copia;
     cout<<endl<<"LOS COMBOS SON: "<<endl;
-    cout<<"id|               Nombre              | precio "<<endl;
+    cout<<"|id|               Nombre              | precio |"<<endl;
     for(r=combos.begin();r!=combos.end();r++){
-        printElement(r->first,5);
-        copia=r->second;
-        for(r2=copia.begin();r2!=copia.end();r2++){
-            printElement(r2->first,35);
-            printElement(r2->second[0],5);
-            cout<<endl;
+        dis=compro_dis(r->first);
+        if(dis==true){ //comprobamos que el combo esta disponible para imprimirlo al cliente
+            printElement(r->first,5);
+            copia=r->second;
+            for(r2=copia.begin();r2!=copia.end();r2++){
+                printElement(r2->first,35);
+                printElement(r2->second[0],5);
+                cout<<endl;
+            }
         }
     }
 }
 
 bool usuarios::compro_dis(int id){
-    //Esta funcion tiene que rectificar que halla existencia del producto y que el dinero sea suficiente
     usuarios ff;
     ff.cargar_inventario();
     bool disponibilidad=false;
     map<string,vector<int>> copia;
-    copia=combos.find(id)->second;
+    copia=combos.find(id)->second; // le asignamos el valor de la id del producto que se va a comprar
     int vaid,vacan;
     r2=copia.begin();
     int tam=r2->second.size();
-    for(int posid=1,poscan=2;poscan<tam;posid+=2,poscan+=2){
-        vaid=r2->second[posid];
-        vacan=r2->second[poscan];
-        disponibilidad=ff.comprobar_inv(vaid,vacan);
+    for(int posid=1,poscan=2;poscan<tam;posid+=2,poscan+=2){ //recorremos el vector
+        vaid=r2->second[posid]; //la id esta en las posiciones impares
+        vacan=r2->second[poscan]; //la cantidad esta en las posiciones pares
+        disponibilidad=ff.comprobar_inv(vaid,vacan); //comprobamos el inventario para ver si es posible hacer el combo
         if(disponibilidad!=true){
-            cout<<endl<<"COMBO NO DISPONIBLE"<<endl;
             break;
         }
     }
@@ -327,11 +330,10 @@ bool usuarios::compro_dis(int id){
 bool usuarios::din_suf(int id,int dinero){
     int preCom;
     map<string,vector<int>> copia;
-    copia=combos.find(id)->second;
+    copia=combos.find(id)->second; //le asiganamos a copia el valor de la id ingresada
     r2=copia.begin();
     preCom=r2->second[0];
-    if(preCom<=dinero){
-
+    if(preCom<=dinero){ //el valor del combo es menor al valor que ingresa el usuario?
         return true;
     }
     else return false;
@@ -360,15 +362,15 @@ void usuarios::mod_inventario(int id){
     usuarios ff;
     ff.cargar_inventario();
     map<string,vector<int>> copia;
-    copia=combos.find(id)->second;
+    copia=combos.find(id)->second; //le asignamos el valor de la id
     int vaid,vacan;
     r2=copia.begin();
     int tam=r2->second.size();
     for(int posid=1,poscan=2;poscan<tam;posid+=2,poscan+=2){
         vaid=r2->second[posid];
         vacan=r2->second[poscan];
-        ff.cambiar_invCom(vaid,vacan);
-        ff.guardar_mapa();
+        ff.cambiar_invCom(vaid,vacan); //modificamos el inventario con cada compra
+        ff.guardar_mapa(); //guardamos los cambios
     }
 }
 
@@ -397,16 +399,21 @@ int regresoCliente(int cosCom,int dinCli){
 void usuarios::mayor_menor(int id, int dinero){
     int preCom,regreso;
     map<string,vector<int>> copia;
-    copia=combos.find(id)->second;
+    copia=combos.find(id)->second; //le asignamos el valor de su id correspondiente
     r2=copia.begin();
-    preCom=r2->second[0];
-    if(preCom<dinero){
+    preCom=r2->second[0]; //le asignamos el valor del combo
+    if(preCom<dinero){ //si el dinero ingresado por el usuario es mayor que el costo del combo, se le da devuelta
         regreso=regresoCliente(preCom,dinero);
         cout<<"Su regreso total es de: $"<<regreso<<endl;
     }
 }
 
 void usuarios::guardar_compra(){
+    /**
+     * Esta funcion hace una copia de combos.txt
+     * y al final en lugar de poner la id y cantidad del producto
+     * agrega 0 para despues calcular las veces que se compra el combo
+     **/
     map<string,vector<int>> copia;
     int A=0;
     string combo="Ventas.txt";
@@ -435,15 +442,19 @@ void usuarios::guardar_compra(){
 void usuarios::efec_compra(int id){
     int cant=0;
     map<string,vector<int>> copia;
-    copia=ventas.find(id)->second;
+    copia=ventas.find(id)->second; //le asignamos el valor de la id que esta en ventas (mapa creado en cargar_combos)
     r2=copia.begin();
-    cant=r2->second[1];
-    cant+=1;
-    r2->second[1]=cant;
-    ventas[id]=copia;
+    cant=r2->second[1]; //le asignamos la cantidad de ventas realizadas por el combo
+    cant+=1; //le sumamos uno
+    r2->second[1]=cant; //cambiamos el vecotr
+    ventas[id]=copia;//actualizamos el mapa
 }
 
 void usuarios::actu_compra(){
+    /**
+     * Esta funcion abre ventas.txt y actualiza el txt de acuerdo a las ventas
+     * realizadas por el Cliente y suministradas por efec_compra
+     **/
     int A=0;
     map<string,vector<int>> copia;
     string name,precio,cant;
@@ -472,4 +483,100 @@ void usuarios::actu_compra(){
             }
         }
     }
+}
+
+void usuarios::reporte_ventas(){
+    /**
+     * Esta funcion imprime de manera amigable
+     * una tabla donde se le muestra al Admin
+     * la cantidad que se ha comprado un producto
+     * y el total de ventas que se han realizado en el dia
+     **/
+    int contadora=0;
+    map<string,vector<int>> copia;
+    cout<<endl<<"Las ventas del dia son: "<<endl;
+    cout<<"|id|               Nombre               |cantidad|"<<endl;
+    for(r=ventas.begin();r!=ventas.end();r++){
+        printElement(r->first,5);
+        copia=r->second;
+        for(r2=copia.begin();r2!=copia.end();r2++){
+            printElement(r2->first,40);
+            printElement(r2->second[1],5);
+            cout<<endl;
+            contadora += r2->second[1]*r2->second[0];
+        }
+    }
+    cout<<endl<<"Las ventatas totales del dia son: $"<<contadora<<endl;
+}
+
+int usuarios::numero_combo(){
+    int tam=combos.size();
+    return tam;
+}
+
+int usuarios::tam_inv(){
+    int tam=Inventario.size();
+    return tam;
+}
+
+void usuarios::guardar_ubicacion(string silla, string sala,int id){
+    string txt="Ubicacion.txt";
+    ofstream agregar;
+    agregar.open(txt,ios::app);
+    agregar<<sala<<" "<<silla<<" "<<"/"<<id<<"\n";
+    agregar.close();
+
+}
+
+void usuarios::cargar_pedido(){
+    string copia,sala,silla,idstr;
+    string text="Ubicacion.txt";
+    text=lectura(text);
+    long long int tam=text.size();
+    int lineas=1,i=0;
+
+    for(int k=0;k<tam;k++){ //contamos las lineas del archivo
+        if(text[k]=='\n') lineas++;
+    }
+
+    for(int k=0;k<lineas-1;k++){ //segmentamos linea a linea el txt
+         while(text[i]!='\n' and text[i] !='\0'){
+            copia.append(1,text[i]);
+            i++;
+        }
+         i++;
+         sala=copia.substr(0,copia.find(" "));
+         silla=copia.substr(copia.find(" ")+1,copia.find("/")-3);
+         idstr=copia.substr(copia.find("/")+1);
+
+         pedidos.push_back(sala);
+         pedidos.push_back(silla);
+         pedidos.push_back(idstr);
+         silla.clear();
+         copia.clear();
+    }
+}
+
+void usuarios::imprimir_pedidos(){
+    map<string,vector<int>> copia;
+    cout<<endl<<"LOS PEDIDOS SON: "<<endl;
+    cout<<"|Sala| Silla  |            Pedido            |"<<endl;
+    int tam=pedidos.size(),idint;
+    for(int sala=0,silla=1,id=2;id<tam;sala+=3,silla+=3,id+=3){
+        printElement(pedidos[sala],7);
+        printElement(pedidos[silla],15);
+        idint=stoi(pedidos[id]);
+        copia=combos.find(idint)->second;
+        r2=copia.begin();
+        printElement(r2->first,10);
+        cout<<endl;
+    }
+}
+
+void usuarios::reiniciar_dia(){
+    string txt="Ubicacion.txt";
+    ofstream agregar;
+    agregar.open(txt,ios::out);
+    agregar<<"";
+    agregar.close();
 }

@@ -15,6 +15,7 @@ class usuarios{
         string nombre;
         string clave;
     public:
+        int numero_combo();
         string lectura(string txt);
         string getNombre() const;
         void setNombre(const string &value);
@@ -40,7 +41,14 @@ class usuarios{
         void guardar_compra();
         void efec_compra(int id);
         void actu_compra();
+        void reporte_ventas();
+        int tam_inv();
+        void guardar_ubicacion(string silla, string sala, int id);
+        void cargar_pedido();
+        void imprimir_pedidos();
+        void reiniciar_dia();
 
+        vector<string> pedidos;
         map<int,map<string,vector<int>>> ventas;
         map<int,map <string,vector<int>>>::iterator r;
         map<string,vector<int>>::iterator r2;
